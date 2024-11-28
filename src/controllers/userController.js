@@ -99,38 +99,32 @@ const handleProcessRegister = async (req, res, next) => {
             );
         }
 
+        // create user into db
+        const user = await User.create({
+            name,
+            email,
+            address,
+            password,
+            phone,
+        });
+
         // create jwt
 
         const tokenPayload = {
-            name,
-            email,
-            password,
-            phone,
-            address,
+            id: user?._id,
+            name: user?.name,
+            email: user?.email,
         };
 
         if (image) {
             tokenPayload.image = image.path;
         }
         const token = createJSONWebToken(tokenPayload, jwtActivationKey, '10m');
-
-        // prepare email
-        const emailData = {
-            email,
-            subject: 'Account Activation Email',
-            html: `
-                <h2> Hello ${name} ! </h2>
-                <p> Please click here to link <a href="${clientURL}/api/users/activate/${token}">activate your account</a> </p>
-            `,
-        };
-
-        // send email with nodemailer
-        sendEmail(emailData);
-
+        res.cookie('authToken', token, { maxAge: 900000, httpOnly: true });
         return successResponse(res, {
-            statusCode: 200,
-            message: `Please go to your ${email} for completing your registration process`,
-            payload: token,
+            statusCode: 201,
+            message: 'user created successfully',
+            data: user,
         });
     } catch (error) {
         next(error);

@@ -31,7 +31,7 @@ userRouter.post(
     runValidation,
     handleProcessRegister
 );
-userRouter.post('/activate', isLoggedOut, handleActivateUserAccount);
+// userRouter.post('/activate', isLoggedOut, handleActivateUserAccount);
 userRouter.get('/', isLoggedIn, isAdmin, handleGetUsers);
 userRouter.get('/:id([0-9a-fA-F]{24})', isLoggedIn, handleGetUserId);
 userRouter.delete('/:id', isLoggedIn, handleDeleteUserById);

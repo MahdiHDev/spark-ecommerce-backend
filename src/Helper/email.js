@@ -9,6 +9,16 @@ const transporter = nodemailer.createTransport({
         user: smtpUsername,
         pass: smtpPassword,
     },
+    logger: true, // Enable detailed logs
+    debug: true, // Enable debug output
+});
+
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Error verifying transporter:', error);
+    } else {
+        console.log('Server is ready to send emails');
+    }
 });
 
 const emailWithNodeMailer = async (emailData) => {
